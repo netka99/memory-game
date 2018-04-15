@@ -32,8 +32,14 @@ function shuffle(array) {
  4. recreate the list by adding the elements of the shuffled list
  */
 
+function shuffleCards() {
+    const $deck = $(".deck").first();
+    const $shuffledCards = shuffle($deck.find(".card"));
+    $shuffledCards.each(function(idx, card) {$deck.append(card);});
+}
+
 function init () {
-    console.log("hello");
+    shuffleCards();
 }
 
 
