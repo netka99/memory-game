@@ -37,24 +37,62 @@ function coverCards() {
     })
 }
 
+function setStars(number) {
+    $(".stars li i").each(function(idx, el) {
+        if (number > 0) {
+            $(el).css("color", "black").removeClass("empty");
+        } else {
+            $(el).css("color", "lightgrey").addClass("empty");
+        }
+        number -= 1;
+    })  
+}
+
 function reset() {
     coverCards();
     setUpGame();
+}
+
+function countStars() {
+    return 3 - $(".stars .empty").length;
+}
+
+function updateStars(moves) {
+    if (moves == 9) {
+        setStars(2);
+    } else if (moves == 17) {
+        setStars(1);
+    } else if (moves == 24) {
+        setStars(0);
+    } 
+}
+
+function getNowSeconds() {
+    return Math.floor(Date.now() / 1000);
 }
 
 function setUpGrid() {
     const $deck = $(".deck").first();
     const $cards = $deck.find(".card");
     const $movesCounter = $(".moves").first();
+    const startSeconds = getNowSeconds();
     let movesCounter = 0;
     let cardCounter = $cards.length;
     let cardList = [];
 
     $movesCounter.text("0");
+    setStars(3);
 
     function showVictoryScreen() {
-        console.log("You won!");
-        setTimeout(reset, 3000);
+        const $modal = $(".modal");
+        $modal.find(".final-moves").text(movesCounter);
+        $modal.find(".final-stars").text(countStars());
+        $modal.find(".final-seconds").text(getNowSeconds() - startSeconds);
+        $modal.removeClass("invisible");
+        $modal.find(".dismiss").off("click").on("click", function () {
+            reset();
+            $modal.addClass("invisible");
+        });
     }
 
     function checkList() {
@@ -63,12 +101,12 @@ function setUpGrid() {
             const $card2 = cardList[1];
             const symbol1 = $card1.find("i")[0].className;
             const symbol2 = $card2.find("i")[0].className;
-            if (symbol1 == symbol2) {
+            if (($card1 !== $card2) && (symbol1 == symbol2)) {
                 $card1.addClass("show");
                 $card2.addClass("show");
                 cardCounter -= 2;
                 if (cardCounter == 0) {
-                    showVictoryScreen();
+                    setTimeout(showVictoryScreen, 500);
                 }
             } else {
                 setTimeout(function () {
@@ -79,6 +117,7 @@ function setUpGrid() {
             cardList = [];
             movesCounter += 1;
             $movesCounter.text(movesCounter);
+            starCounter = updateStars(movesCounter);
         }
     }
 
