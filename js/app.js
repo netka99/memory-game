@@ -31,10 +31,31 @@ function shuffleCards() {
     $shuffledCards.each(function(idx, card) {$deck.append(card);});
 }
 
+function coverCards() {
+    $(".deck .card").each(function(idx, card){
+        $(card).removeClass("match show");
+    })
+}
+
+function reset() {
+    coverCards();
+    setUpGame();
+}
+
 function setUpGrid() {
     const $deck = $(".deck").first();
     const $cards = $deck.find(".card");
+    const $movesCounter = $(".moves").first();
+    let movesCounter = 0;
+    let cardCounter = $cards.length;
     let cardList = [];
+
+    $movesCounter.text("0");
+
+    function showVictoryScreen() {
+        console.log("You won!");
+        setTimeout(reset, 3000);
+    }
 
     function checkList() {
         if (cardList.length == 2) {
@@ -45,6 +66,10 @@ function setUpGrid() {
             if (symbol1 == symbol2) {
                 $card1.addClass("show");
                 $card2.addClass("show");
+                cardCounter -= 2;
+                if (cardCounter == 0) {
+                    showVictoryScreen();
+                }
             } else {
                 setTimeout(function () {
                    $card1.removeClass("match");
@@ -52,6 +77,8 @@ function setUpGrid() {
                 }, 1000)
             }
             cardList = [];
+            movesCounter += 1;
+            $movesCounter.text(movesCounter);
         }
     }
 
@@ -65,9 +92,14 @@ function setUpGrid() {
     })
 }
 
-function init () {
+function setUpGame(){
     shuffleCards();
     setUpGrid();
+}
+
+function init () {
+    $(".restart").on("click", reset);
+    setUpGame();
 }
 
 
