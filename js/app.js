@@ -32,11 +32,35 @@ function shuffleCards() {
 }
 
 function setUpGrid() {
-    const $cards = $(".deck .card");
+    const $deck = $(".deck").first();
+    const $cards = $deck.find(".card");
+    let cardList = [];
+
+    function checkList() {
+        if (cardList.length == 2) {
+            const $card1 = cardList[0];
+            const $card2 = cardList[1];
+            const symbol1 = $card1.find("i")[0].className;
+            const symbol2 = $card2.find("i")[0].className;
+            if (symbol1 == symbol2) {
+                $card1.addClass("show");
+                $card2.addClass("show");
+            } else {
+                setTimeout(function () {
+                   $card1.removeClass("match");
+                   $card2.removeClass("match");
+                }, 1000)
+            }
+            cardList = [];
+        }
+    }
+
     $cards.each(function(idx, card) {
-        $(card).on("click", function() {
-            console.log("clicked");
-            console.log(card);
+        const $card = $(this);
+        $card.on("click", function() {
+            $card.addClass("match");
+            cardList.push($card);
+            checkList();
         })
     })
 }
