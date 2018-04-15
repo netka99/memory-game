@@ -25,21 +25,25 @@ function shuffle(array) {
     return array;
 }
 
-/*
- 1. create a list of all the li
- 2. remove the list from the html
- 3. shuffle the list
- 4. recreate the list by adding the elements of the shuffled list
- */
-
 function shuffleCards() {
     const $deck = $(".deck").first();
     const $shuffledCards = shuffle($deck.find(".card"));
     $shuffledCards.each(function(idx, card) {$deck.append(card);});
 }
 
+function setUpGrid() {
+    const $cards = $(".deck .card");
+    $cards.each(function(idx, card) {
+        $(card).on("click", function() {
+            console.log("clicked");
+            console.log(card);
+        })
+    })
+}
+
 function init () {
     shuffleCards();
+    setUpGrid();
 }
 
 
