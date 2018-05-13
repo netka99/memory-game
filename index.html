@@ -1,7 +1,7 @@
-..<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Matching Game</title>
     <meta name="description" content="">
     <link rel="stylesheet prefetch" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
@@ -10,12 +10,12 @@
 </head>
 <body>
     <div class="modal invisible">
-        <h2>You have won!</h2>
+        <h2>Congratulations! You Won!</h2>
         <p>You completed the game in <span class="final-seconds"></span>
             seconds,  
             <span class="final-moves"></span>
             moves, and a rating of <span class="final-stars"></span> stars</p>
-        <button class="dismiss">Try again</button>
+        <button class="dismiss">Play again</button>
         </div>
 
     <div class="container">
@@ -30,7 +30,9 @@
         		<li><i class="fa fa-star"></i></li>
         	</ul>
 
-        	<span class="moves">3</span> Moves
+            <span class="moves">3</span> Moves
+            
+            <span class="timer"><span class="seconds">0</span> seconds</span>
 
             <div class="restart">
         		<i class="fa fa-repeat"></i>

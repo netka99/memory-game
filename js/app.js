@@ -48,27 +48,26 @@ function setStars(number) {
     })  
 }
 
-function reset() {
-    coverCards();
-    setUpGame();
-}
-
 function countStars() {
     return 3 - $(".stars .empty").length;
 }
 
 function updateStars(moves) {
-    if (moves == 9) {
+    if (moves == 17) {
         setStars(2);
-    } else if (moves == 17) {
+    } else if (moves == 25) {
         setStars(1);
-    } else if (moves == 24) {
-        setStars(0);
     } 
 }
 
 function getNowSeconds() {
     return Math.floor(Date.now() / 1000);
+}
+
+function startTimer(startSeconds) {
+    return setInterval(function () {
+        $(".seconds").text(getNowSeconds() - startSeconds);
+    }, 1000);
 }
 
 function setUpGrid() {
@@ -85,9 +84,10 @@ function setUpGrid() {
 
     function showVictoryScreen() {
         const $modal = $(".modal");
+        clearInterval(timer);
         $modal.find(".final-moves").text(movesCounter);
         $modal.find(".final-stars").text(countStars());
-        $modal.find(".final-seconds").text(getNowSeconds() - startSeconds);
+        $modal.find(".final-seconds").text($(".seconds").text());
         $modal.removeClass("invisible");
         $modal.find(".dismiss").off("click").on("click", function () {
             reset();
@@ -97,6 +97,7 @@ function setUpGrid() {
 
     function checkList() {
         if (cardList.length == 2) {
+            removeClicks();
             const $card1 = cardList[0];
             const $card2 = cardList[1];
             const symbol1 = $card1.find("i")[0].className;
@@ -107,12 +108,15 @@ function setUpGrid() {
                 cardCounter -= 2;
                 if (cardCounter == 0) {
                     setTimeout(showVictoryScreen, 500);
+                } else {
+                    addClicks();
                 }
             } else {
                 setTimeout(function () {
                    $card1.removeClass("match");
                    $card2.removeClass("match");
-                }, 1000)
+                   addClicks();
+                }, 800)
             }
             cardList = [];
             movesCounter += 1;
@@ -121,14 +125,34 @@ function setUpGrid() {
         }
     }
 
-    $cards.each(function(idx, card) {
-        const $card = $(this);
-        $card.on("click", function() {
-            $card.addClass("match");
-            cardList.push($card);
-            checkList();
+    function addClicks() {
+        $cards.each(function(idx, card) {
+            const $card = $(this);
+            $card.on("click", function() {
+                $card.off("click");
+                $card.addClass("match");
+                cardList.push($card);
+                checkList();
+            })
         })
-    })
+    }
+
+    function removeClicks() {
+        $cards.each(function(idx, card) {
+            $(card).off("click");
+        })
+    }
+
+    addClicks();
+
+    function reset() {
+        clearInterval(timer);
+        coverCards();
+        setUpGame();
+    }
+
+    let timer = startTimer(startSeconds);
+    $(".restart").on("click", reset);
 }
 
 function setUpGame(){
@@ -137,10 +161,8 @@ function setUpGame(){
 }
 
 function init () {
-    $(".restart").on("click", reset);
     setUpGame();
 }
-
 
 $(document).ready(init);
 /*
